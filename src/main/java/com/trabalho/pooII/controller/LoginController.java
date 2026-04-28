@@ -15,8 +15,13 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping()
-    public void logString(@RequestBody String entity) {
+    public void login(@RequestBody String entity) {
         loginService.Entrar();
     }
      
+    @PostMapping("/cadastrar")
+    public void cadasstrar(@RequestBody String entity) {
+        loginService.Cadastrar();
+    }
+
 }
