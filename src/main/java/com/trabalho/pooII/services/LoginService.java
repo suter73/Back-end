@@ -1,26 +1,31 @@
 package com.trabalho.pooII.services;
 
-import com.trabalho.pooII.dto.CadastroRequestDTO;
-import com.trabalho.pooII.dto.CadastroResponseDTO;
-import com.trabalho.pooII.model.Usuario;
-import com.trabalho.pooII.repository.UsuarioRepository;
-import com.trabalho.pooII.services.interfaces.Login;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.trabalho.pooII.dto.CadastroRequestDTO;
+import com.trabalho.pooII.dto.CadastroResponseDTO;
+import com.trabalho.pooII.dto.LoginRequestDTO;
+import com.trabalho.pooII.dto.LoginResponseDTO;
+import com.trabalho.pooII.model.Usuario;
+import com.trabalho.pooII.repository.UsuarioRepository;
+import com.trabalho.pooII.services.interfaces.Login;
 
 @Service
 public class LoginService implements Login {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
+    @Transactional
     public CadastroResponseDTO cadastrar(CadastroRequestDTO dto) {
         List<String> errors = new ArrayList<>();
 
@@ -51,12 +56,35 @@ public class LoginService implements Login {
         usuario.setEmailUsuario(dto.getEmailUsuario());
         usuario.setSenhaUsuario(passwordEncoder.encode(dto.getSenhaUsuario()));
         usuario.setTipoUsuario(dto.getTipoUsuario());
-
+        
         usuarioRepository.save(usuario);
 
         return new CadastroResponseDTO(true, new ArrayList<>());
     }
 
     @Override
-    public void entrar() {}
+    public LoginResponseDTO logar(LoginRequestDTO loginRequest) {
+        List<String> errors = new ArrayList<>();
+
+        if (loginRequest.getEmailUsuario() == null || loginRequest.getEmailUsuario().isBlank()) {
+            errors.add("emailUsuario é obrigatório");
+        }
+        if (loginRequest.getSenhaUsuario() == null || loginRequest.getSenhaUsuario().isBlank()) {
+            errors.add("senhaUsuario é obrigatório");
+        }
+
+        if (!errors.isEmpty()) {
+            return new LoginResponseDTO(false, errors);
+        }
+
+        Usuario usuario = usuarioRepository.findByEmailUsuario(loginRequest.getEmailUsuario())
+                .orElse(null);
+
+        if (usuario == null || !passwordEncoder.matches(loginRequest.getSenhaUsuario(), usuario.getSenhaUsuario())) {
+            errors.add("Email ou senha inválidos");
+            return new LoginResponseDTO(false, errors);
+        }
+
+        return new LoginResponseDTO(true, new ArrayList<>(), usuario.getNomeUsuario(), usuario.getTipoUsuario());
+    }
 }
