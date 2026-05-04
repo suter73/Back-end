@@ -20,6 +20,16 @@ public class Paciente {
     @Column(name = "dataNascimentoPaciente", nullable = false)
     private String dataNascimentoPaciente;
 
+    public Paciente(
+        Usuario usuario,
+        String cpfPaciente,
+        String dataNascimentoPaciente
+    ){
+        this.usuario = usuario;
+        this.cpfPaciente = cpfPaciente;
+        this.dataNascimentoPaciente = dataNascimentoPaciente;
+    }
+
     public Long getIdPaciente() { return idPaciente; }
     public void setIdPaciente(Long idPaciente) { this.idPaciente = idPaciente; }
 

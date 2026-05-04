@@ -20,6 +20,16 @@ public class Medico {
     @Column(name = "especialidadeMedico", nullable = false)
     private String especialidadeMedico;
 
+    public Medico(
+        Usuario usuario,
+        String crmMedico,
+        String especialidadeMedico
+    ){
+        this.usuario = usuario;
+        this.crmMedico = crmMedico;
+        this.especialidadeMedico = especialidadeMedico;
+    }
+
     public Long getIdMedico() { return idMedico; }
     public void setIdMedico(Long idMedico) { this.idMedico = idMedico; }
 
