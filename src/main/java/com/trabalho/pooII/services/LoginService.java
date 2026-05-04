@@ -12,7 +12,12 @@ import com.trabalho.pooII.dto.CadastroRequestDTO;
 import com.trabalho.pooII.dto.CadastroResponseDTO;
 import com.trabalho.pooII.dto.LoginRequestDTO;
 import com.trabalho.pooII.dto.LoginResponseDTO;
+import com.trabalho.pooII.dto.enums.TipoUsuario;
+import com.trabalho.pooII.model.Medico;
+import com.trabalho.pooII.model.Paciente;
 import com.trabalho.pooII.model.Usuario;
+import com.trabalho.pooII.repository.MedicoRepository;
+import com.trabalho.pooII.repository.PacienteRepository;
 import com.trabalho.pooII.repository.UsuarioRepository;
 import com.trabalho.pooII.services.interfaces.Login;
 
@@ -21,6 +26,12 @@ public class LoginService implements Login {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private MedicoRepository medicoRepository;
     
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -58,6 +69,16 @@ public class LoginService implements Login {
         usuario.setTipoUsuario(dto.getTipoUsuario());
         
         usuarioRepository.save(usuario);
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO)){
+            medicoRepository.save(
+                new Medico(usuario, null, null)
+            );
+        } else if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE)){
+            pacienteRepository.save(
+                new Paciente(usuario, null, null)
+        );
+        }
 
         return new CadastroResponseDTO(true, new ArrayList<>());
     }
