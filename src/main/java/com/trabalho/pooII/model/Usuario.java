@@ -3,23 +3,23 @@ package com.trabalho.pooII.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
-    @Column(length = 150, nullable = false)
+    @Column(name = "nomeUsuario", length = 150, nullable = false)
     private String nomeUsuario;
 
-    @Column(length = 60, nullable = false, unique = true)
+    @Column(name = "emailUsuario", length = 60, nullable = false, unique = true)
     private String emailUsuario;
 
-    @Column(length = 60, nullable = false)
+    @Column(name = "senhaUsuario", length = 60, nullable = false)
     private String senhaUsuario;
 
-    @Column(nullable = false)
+    @Column(name = "tipoUsuario", nullable = false)
     private Integer tipoUsuario;
 
     public Long getIdUsuario() { return idUsuario; }
