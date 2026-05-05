@@ -1,6 +1,15 @@
 package com.trabalho.pooII.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "paciente")
@@ -18,12 +27,12 @@ public class Paciente {
     private String cpfPaciente;
 
     @Column(name = "dataNascimentoPaciente", nullable = false)
-    private String dataNascimentoPaciente;
+    private LocalDate dataNascimentoPaciente;
 
     public Paciente(
         Usuario usuario,
         String cpfPaciente,
-        String dataNascimentoPaciente
+        LocalDate dataNascimentoPaciente
     ){
         this.usuario = usuario;
         this.cpfPaciente = cpfPaciente;
@@ -39,6 +48,6 @@ public class Paciente {
     public String getCpfPaciente() { return cpfPaciente; }
     public void setCpfPaciente(String cpfPaciente) { this.cpfPaciente = cpfPaciente; }
 
-    public String getDataNascimentoPaciente() { return dataNascimentoPaciente; }
-    public void setDataNascimentoPaciente(String dataNascimentoPaciente) { this.dataNascimentoPaciente = dataNascimentoPaciente; }
+    public LocalDate getDataNascimentoPaciente() { return dataNascimentoPaciente; }
+    public void setDataNascimentoPaciente(LocalDate dataNascimentoPaciente) { this.dataNascimentoPaciente = dataNascimentoPaciente; }
 }
