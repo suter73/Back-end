@@ -40,6 +40,8 @@ public class LoginService implements Login {
     public CadastroResponseDTO cadastrar(CadastroRequestDTO dto) {
         List<String> errors = new ArrayList<>();
 
+        // ------------ VALIDAÇÕES GENÉRICAS PARA USUÁRIOS
+        
         if (dto.getNomeUsuario() == null || dto.getNomeUsuario().isBlank()) {
             errors.add("nomeUsuario é obrigatório");
         }
@@ -53,15 +55,56 @@ public class LoginService implements Login {
             errors.add("tipoUsuario deve ser 1 ou 2");
         }
 
+        // ------------------------
+
+
+
+        // ------------ VALIDAÇÕES ESPECÍFICAS PARA PACIENTE
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE) && (!dto.getCrmMedico().isEmpty() || !dto.getEspecialidadeMedico().isEmpty())){
+            errors.add("Para paciente, não precisa informar ESPECIALIDADE ou CRM.");    
+        }
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE) && dto.getDataNascimentoPaciente().equals(null)){
+            errors.add("Para Paciente, Necessário informar data de nascimento");    
+        }
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE) && dto.getCpfPaciente().isEmpty()){
+            errors.add("Para Paciente, Necessário informar CPF");    
+        }
+
+        // ---------------------------------
+
+
+        // ------------ VALIDAÇÕES ESPECÍFICAS PARA MÉDICO
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO) && (!dto.getCpfPaciente().isEmpty() || !dto.getDataNascimentoPaciente().equals(null))){
+            errors.add("Para médico, não precisa informar CPF ou Data Nascimento");    
+        }
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO) && dto.getCrmMedico().equals(null)){
+            errors.add("Para médico, Necessário informar CRM");    
+        }
+
+        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO) && dto.getEspecialidadeMedico().isEmpty()){
+            errors.add("Para médico, Necessário informar Especialidade");    
+        }
+
+        // ---------------------------------
+
+
+        // Em caso de erro, encerra cadastro
         if (!errors.isEmpty()) {
             return new CadastroResponseDTO(false, errors);
         }
 
+        // Valida se usuário já existe no banco
         if (usuarioRepository.findByEmailUsuario(dto.getEmailUsuario()).isPresent()) {
             errors.add("Email já cadastrado");
             return new CadastroResponseDTO(false, errors);
         }
 
+        // Cria e salva usuário
         Usuario usuario = new Usuario();
         usuario.setNomeUsuario(dto.getNomeUsuario());
         usuario.setEmailUsuario(dto.getEmailUsuario());
@@ -70,16 +113,18 @@ public class LoginService implements Login {
         
         usuarioRepository.save(usuario);
 
+        // Cria corretamente paciente ou médico baseado no seu tipo
         if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO)){
             medicoRepository.save(
-                new Medico(usuario, null, null)
+                new Medico(usuario, dto.getCrmMedico(), dto.getEspecialidadeMedico())
             );
         } else if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE)){
             pacienteRepository.save(
-                new Paciente(usuario, null, null)
+                new Paciente(usuario, dto.getCpfPaciente(), dto.getDataNascimentoPaciente())
         );
         }
 
+        // Retorna validação e transação como finalizada
         return new CadastroResponseDTO(true, new ArrayList<>());
     }
 
