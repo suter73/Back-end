@@ -8,6 +8,7 @@ public class Medico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idMedico", nullable = false)
     private Long idMedico;
 
     @ManyToOne
