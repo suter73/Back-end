@@ -114,11 +114,11 @@ public class LoginService implements Login {
         usuarioRepository.save(usuario);
 
         // Cria corretamente paciente ou médico baseado no seu tipo
-        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO)){
+        if (dto.getTipoUsuario().equals(TipoUsuario.MEDICO.getCodigo())){
             medicoRepository.save(
                 new Medico(usuario, dto.getCrmMedico(), dto.getEspecialidadeMedico())
             );
-        } else if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE)){
+        } else if (dto.getTipoUsuario().equals(TipoUsuario.PACIENTE.getCodigo())){
             pacienteRepository.save(
                 new Paciente(usuario, dto.getCpfPaciente(), dto.getDataNascimentoPaciente())
         );
