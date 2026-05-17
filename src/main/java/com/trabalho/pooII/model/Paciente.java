@@ -17,7 +17,7 @@ public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idPaciante", nullable = false)
+    @Column(name = "idPaciente", nullable = false)
     private Long idPaciente;
 
     @ManyToOne
@@ -29,6 +29,8 @@ public class Paciente {
 
     @Column(name = "dataNascimentoPaciente", nullable = false)
     private LocalDate dataNascimentoPaciente;
+
+    public Paciente() {}
 
     public Paciente(
         Usuario usuario,

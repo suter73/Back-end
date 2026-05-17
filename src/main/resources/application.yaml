@@ -2,7 +2,7 @@ spring:
   application:
     name: pooII
   datasource:
-    url: jdbc:mysql://127.0.0.1:8080/PO_II_DATABASE
+    url: jdbc:mysql://127.0.0.1:8090/PO_II_DATABASE
     username: POO_II_USER
     password: PO_II_PASSWORD123@
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,3 +16,8 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 server:
   port : 8081
+
+supabase:
+  url: 
+  key: 
+  bucket: 
