@@ -15,7 +15,9 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                            "http://localhost:8080"
+                            "http://localhost:8080",
+                            "http://localhost:8082", // Ambiente local
+                            "https://back-end-6jgs.onrender.com" // Ambiente de produção
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
